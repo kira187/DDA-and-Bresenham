@@ -1,0 +1,95 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace DDAvsBresenham
+{
+    public partial class Form1 : Form
+    {
+        //Linea linea;
+        Point PuntoI;
+        Point PuntoF;
+
+        int xi, yi;
+        int xf, yf;
+
+        struct Point
+        {
+            public int x, y;
+            public Point(int x, int y)
+            {
+                this.x = x;
+                this.y = y;
+            }
+        }
+
+        public Form1()
+        {
+            InitializeComponent();
+            xi = yi = -1;
+            xf = yf = -1;
+        }
+
+        private void panel_DDA_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        //dibujado de cordenadas
+        private void crearCoordenada()
+        {
+            Pen pen = new Pen(Color.Tomato, 3);
+            int xi, yi, xf, yf;
+            
+            xi = PuntoI.x;
+            yi = PuntoI.y;
+
+            xf = PuntoF.x;
+            yf = PuntoF.y;
+            
+            panel_DDA.CreateGraphics().DrawEllipse(pen, xi, yi, 3, 3);
+            panel_DDA.CreateGraphics().DrawEllipse(pen, xf, yf, 3, 3);
+
+
+        }
+
+        private void panel_DDA_MouseClick(object sender, MouseEventArgs e)
+        {
+
+            if (xi == -1)
+            {
+                xi = e.X;
+                yi = e.Y;
+                PuntoI = new Point(xi, yi);
+                
+            }
+            else
+            {
+                xf = e.X;
+                yf = e.Y;
+                PuntoF = new Point(xf, yf);
+
+                Console.WriteLine("------------- Puntos ------------------");
+                Console.WriteLine("punto inicial: (" + xi + ", " + xi+ ")");
+                Console.WriteLine("punto final: (" + xf + ", " + yf + ")");
+                //DDA(workSpace1, line);
+                xi = -1;
+            }
+       
+             crearCoordenada();
+           
+        }
+
+        private void DDA()
+        {
+
+        }
+
+    }
+}
