@@ -13,7 +13,7 @@ namespace DDAvsBresenham
 {
     public partial class Form1 : Form
     {
-        //Linea linea;
+     
         Point Punto_I;
         Point Punto_F;
         Bitmap bmp = new Bitmap(370, 360);
@@ -26,10 +26,7 @@ namespace DDAvsBresenham
         {
             InitializeComponent();
         }
-
-        
-        //dibujado de cordenadas
-        private void crearCoordenada()
+        private void CrearCoordenada()
         {
             int xi, yi, xf, yf;
             Pen pen = new Pen(Color.Tomato, 3);
@@ -43,12 +40,9 @@ namespace DDAvsBresenham
                        
             Gfx.FillRectangle(Brushes.Tomato, xi-1, yi-1, 2, 2);
             Gfx.FillRectangle(Brushes.Tomato, xf-1, yf-1, 2, 2);
-            //linea_DDA();
             pictureBox1.Image = bmp;
 
         }
-
- 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
             if (xi == 0)
@@ -66,115 +60,32 @@ namespace DDAvsBresenham
 
                 Punto_F = new Point((int)xf, (int)yf);
                 
-                Console.WriteLine("------------- captura de coordenadas ------------------");
-                Console.WriteLine("punto x inicial: (" + xi + ", " + yi + ")");
-                Console.WriteLine("punto y final: (" + xf + ", " + yf + ")");
+                
 
-                linea_DDA(xi, yi, xf, yf);
-                linea_Bres(xi, yi, xf, yf);
-                crearCoordenada();
+                lblinitialpoint.Text = "(" + xi + " , " + yi + ")";
+                lblfinalpoint.Text = "(" + xf + " , " + yf + ")";
+
+                Linea_Bres(xi, yi, xf, yf);
+                Linea_DDA(xi, yi, xf, yf);
+
+                pictureBox1.Image = bmp;
                 xi = 0;
 
             }
 
         }
-
-
-        private void bresenhamX(int xi, int yi, int xf, int yf, int dx, int dy)
-        {
-            int i, j, k,aux;
-
-            i = (2 * dy) - dx;
-            j = 2 * dy;
-            k = 2 * (dy - dx);
-
-            if (!(xi < xf))
-            {
-                aux = xi;
-                xi = xf;
-                xf = aux;
-
-                aux = yi;
-                yi = yf;
-                yf = aux;
-            }
-
-            bmp.SetPixel(xi, yi, Color.Red);
-
-            while (xi < xf)
-            {
-                if (i < 0)
-                {
-                    i += j;
-                }
-                else
-                {
-                    if (yi < yf)
-                    {
-                        ++yi;
-                    }
-                    else
-                    {
-                        --yi;
-                    }
-                    i += k;
-                }
-                ++xi;
-                bmp.SetPixel(xi, yi, Color.Red); 
-            }
-        }
-        private void bresenhamY(int xi, int yi, int xf, int yf, int dx, int dy)
-        {
-            int i, j, k, aux;
-            i = (2 * dx) - dy;
-            j = 2 * dx;
-            k = 2 * (dx - dy);
-
-            if (!(yi<yf))
-            {
-                aux = xf;
-                xf = xi;
-                xi = aux;
-
-                aux = yi;
-                yi = yf;
-                yf = aux;
-            }
-
-            bmp.SetPixel(xi, yi, Color.Red);
-
-            while (yi < yf)
-            {
-                if (i < 0)
-                {
-                    i += j;
-                }
-                else
-                {
-                    if (xi > xf)
-                    {
-                        --xi;
-                    }
-                    else
-                    {
-                        ++xi;
-                    }
-                    i += k;
-                }
-                ++yi;
-                bmp.SetPixel(xi, yi, Color.Red);
-            }
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
 
             Graphics g = Graphics.FromImage(bmp);
             g.FillRectangle(Brushes.White , 0, 0, 370, 350);
             pictureBox1.Image = bmp;
+            timebresenham.Text = "0.00";
+            timedda.Text = "0.00";
+            lblinitialpoint.Text = "(00 , 00)";
+            lblfinalpoint.Text = "(00 , 00)";
         }
-
-        private void linea_DDA(int xi, int yi, int xf, int yf)
+        private void Linea_DDA(int xi, int yi, int xf, int yf)
         {
             Stopwatch sw = new Stopwatch();        
             sw.Start();
@@ -215,8 +126,7 @@ namespace DDAvsBresenham
            
             timedda.Text = String.Format("{0}",sw.Elapsed.TotalMilliseconds);
         }
-
-        private void linea_Bres(int xi, int yi, int xf, int yf)
+        private void Linea_Bres(int xi, int yi, int xf, int yf)
         {
 
             Stopwatch sw2 = new Stopwatch();
@@ -234,6 +144,91 @@ namespace DDAvsBresenham
                 bresenhamY(xi, yi, xf, yf, dx, dy);
             }
             timebresenham.Text = String.Format("{0}", sw2.Elapsed.TotalMilliseconds);
+        }
+        private void bresenhamX(int xi, int yi, int xf, int yf, int dx, int dy)
+        {
+            int i, j, k, aux;
+
+            i = (2 * dy) - dx;
+            j = 2 * dy;
+            k = 2 * (dy - dx);
+
+            if (!(xi < xf))
+            {
+                aux = xi;
+                xi = xf;
+                xf = aux;
+
+                aux = yi;
+                yi = yf;
+                yf = aux;
+            }
+
+            bmp.SetPixel(xi, yi, Color.Red);
+
+            while (xi < xf)
+            {
+                if (i < 0)
+                {
+                    i += j;
+                }
+                else
+                {
+                    if (yi < yf)
+                    {
+                        ++yi;
+                    }
+                    else
+                    {
+                        --yi;
+                    }
+                    i += k;
+                }
+                ++xi;
+                bmp.SetPixel(xi, yi, Color.Red);
+            }
+        }
+        private void bresenhamY(int xi, int yi, int xf, int yf, int dx, int dy)
+        {
+            int i, j, k, aux;
+            i = (2 * dx) - dy;
+            j = 2 * dx;
+            k = 2 * (dx - dy);
+
+            if (!(yi < yf))
+            {
+                aux = xf;
+                xf = xi;
+                xi = aux;
+
+                aux = yi;
+                yi = yf;
+                yf = aux;
+            }
+
+            bmp.SetPixel(xi, yi, Color.Red);
+
+            while (yi < yf)
+            {
+                if (i < 0)
+                {
+                    i += j;
+                }
+                else
+                {
+                    if (xi > xf)
+                    {
+                        --xi;
+                    }
+                    else
+                    {
+                        ++xi;
+                    }
+                    i += k;
+                }
+                ++yi;
+                bmp.SetPixel(xi, yi, Color.Red);
+            }
         }
     }
 }
